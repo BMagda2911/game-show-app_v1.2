@@ -97,7 +97,7 @@ button {
   color: #000;
 }
 
-.show:hover {
+.show-hover {
   transform: rotate(5deg);
 }
 
@@ -115,6 +115,15 @@ button {
   border-radius: 5px;
   font-size: var(--font-size-medium);
 }
+
+.chosen {
+  background-color: var(--color-win);
+  color: white;
+}
+
+/*. add stylings when you get to this point
+invalid {}
+*/
 
 /* Overlay */
 
