@@ -8,21 +8,22 @@ const lostHeartSRC = 'images/lostHeart.png';
 let missed = 0;
 const letterLI = document.getElementsByClassName('letter');
 const showLI = document.getElementsByClassName('show');
+const headlineText = overlay.querySelector('.title');
 
 // An array of phrases that contains at least 5 different ones as strings is set up.
 const phrases = [
-  "Get your act together",
-  "Cut somebody some slack",
-  "A dime a dozen",
-  "To get bent out of shape",
-  "Add insult to injury"
+  "get your act together",
+  "cut somebody some slack",
+  "a dime a dozen",
+  "to get bent out of shape",
+  "add insult to injury"
 ];
 
 // -- start of all functions --
 
 // Create a getRandomPhraseAsArray function.
 const getRandomPhraseAsArray = array => {
-  // This function randomly chooses a phrase from the phrases array on line 10 and splits that phrase into a new array of characters. The function then returns the new character array.
+  // This function randomly chooses a phrase from the phrases array on line 14 and splits that phrase into a new array of characters. The function then returns the new character array.
   let randomIndexInArray = Math.floor(Math.random() * array.length)
   let randomPhraseInArray = array[randomIndexInArray]
   return phraseSplitToLetters = randomPhraseInArray.split(''); // help source: https://www.w3schools.com/jsref/jsref_split.asp
@@ -46,14 +47,14 @@ const addPhraseToDisplay = (phraseArray) => {
   }
 }
 
-// Create checkLetter function. The parameter 'chosenButton' is the player's guess (the button that gets clicked).
-const checkLetter = (chosenButton) => {
+// Create checkLetter function. The parameter 'letterAsListItem' is the player's guess (the button that gets clicked).
+const checkLetter = (letterAsListItem) => {
   const injectedLetters = phrase.querySelectorAll('.letter');
   let match = null;
   for (let i = 0; i < injectedLetters.length; i++) {
-    if (chosenButton.textContent === injectedLetters[i].textContent) {
-      injectedLetters[i].classList.add(' show', ' show-hover'); // help source: https://www.w3schools.com/jsref/prop_element_classlist.asp
-      match = chosenButton;
+    if (letterAsListItem === injectedLetters[i].textContent) {
+      injectedLetters[i].classList.add('show');
+      match = injectedLetters[i].textContent;
     }
   }
   return match; // exits the function with null value as no match was found and returns the value of match, if match was found
@@ -64,23 +65,22 @@ startGameButton.addEventListener('click', () => {
   if (startGameButton.textContent === 'Start Game') {
     startTheGame();
     overlay.style.display = 'none';
-  }/*  else {
-    // here the resetTheGame method needs to be inserted for "exceeds expectations"
-    // here the startTheGame method needs to be inserted 
-    overlay.style.display = '';
-  } */
+  } else if (startGameButton.textContent === 'Try again' || 'Go again') {
+    // here the game reset happens --> help source: https://developer.mozilla.org/en-US/docs/Web/API/Window/location
+    window.location = location;
+  }
 });
-
 
 // Add an event listener to the keyboard (#qwerty).
 // help source: https://teamtreehouse.com/workspaces/41775226 and course (Javascript and the DOM)
 qwerty.addEventListener('click', (e) => {
   const letterAsButton = e.target;
   if (letterAsButton.tagName === 'BUTTON') {
-    letterAsButton.classList.add('chosen');
+    letterAsButton.classList.add('correct-choice');
     letterAsButton.disabled = true;
     const letterFound = checkLetter(letterAsButton.textContent);
     if (letterFound === null) {
+      letterAsButton.className = 'lose';
       heartImage[missed].src = lostHeartSRC;
       missed++;
     }
@@ -88,17 +88,20 @@ qwerty.addEventListener('click', (e) => {
   checkWin();
 });
 
-// Create checkWin function --start
-const checkWin = () => {
-  if (letterLI.length === showLI.length) {
-    toggleOverlay('win', 'flex');
-  } else if (missed > 4) {
-    toggleOverlay('lose', 'flex');
-  }
-}
-
-// Create function to toggle overlays when needed
-function toggleOverlay(cssClass, styling) {
+// Create additional function to toggle overlays when needed
+const toggleOverlay = (cssClass, styling, text) => {
   overlay.className = cssClass;
   overlay.style.display = styling;
+  headlineText.textContent = text;
+}
+
+// Create checkWin function
+const checkWin = () => {
+  if (letterLI.length === showLI.length) {
+    toggleOverlay('win', 'flex', 'You are good at this! Challenge yourself again?');
+    startGameButton.textContent = 'Go again';
+  } else if (missed > 4) {
+    toggleOverlay('lose', 'flex', 'You almost had it!');
+    startGameButton.textContent = 'Try again';
+  }
 }
