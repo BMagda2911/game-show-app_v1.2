@@ -89,16 +89,18 @@ button {
   border-radius: 5px;
 }
 
+.letter:hover {
+  transform: translate3d(0,-10px,0);
+  font-weight: 900;
+  border: 2px solid var(--color-win);
+}
+
 .space {
   width: 15px;
 }
 
 .show {
   color: #000;
-}
-
-.show-hover {
-  transform: rotate(5deg);
 }
 
 /* Keyboard */
@@ -114,16 +116,13 @@ button {
   background: #FFFFFF;
   border-radius: 5px;
   font-size: var(--font-size-medium);
+  cursor: pointer;
 }
 
-.chosen {
+.correct-choice {
   background-color: var(--color-win);
   color: white;
 }
-
-/*. add stylings when you get to this point
-invalid {}
-*/
 
 /* Overlay */
 
