@@ -1,14 +1,15 @@
 const qwerty = document.getElementById('qwerty');
 const phrase = document.getElementById('phrase');
 const ulOfPhraseDiv = phrase.querySelector('ul');
-const startGameButton = document.querySelector('.btn__reset');
+const startOrResetButton = document.querySelector('.btn__reset');
 const overlay = document.getElementById('overlay');
 const heartImage = document.querySelectorAll('.tries img');
 const lostHeartSRC = 'images/lostHeart.png';
-let missed = 0;
 const letterLI = document.getElementsByClassName('letter');
 const showLI = document.getElementsByClassName('show');
 const headlineText = overlay.querySelector('.title');
+let missed = 0;
+
 
 // An array of phrases that contains at least 5 different ones as strings is set up.
 const phrases = [
@@ -61,11 +62,11 @@ const checkLetter = (letterAsListItem) => {
 }
 
 // Add an event listener to the start button.
-startGameButton.addEventListener('click', () => {
-  if (startGameButton.textContent === 'Start Game') {
+startOrResetButton.addEventListener('click', () => {
+  if (startOrResetButton.textContent === 'Start Game') {
     startTheGame();
     overlay.style.display = 'none';
-  } else if (startGameButton.textContent === 'Try again' || 'Go again') {
+  } else if (startOrResetButton.textContent === 'Try again' || 'Go again') {
     // here the game reset happens --> help source: https://developer.mozilla.org/en-US/docs/Web/API/Window/location
     window.location = location;
   }
@@ -76,10 +77,11 @@ startGameButton.addEventListener('click', () => {
 qwerty.addEventListener('click', (e) => {
   const letterAsButton = e.target;
   if (letterAsButton.tagName === 'BUTTON') {
-    letterAsButton.classList.add('correct-choice');
     letterAsButton.disabled = true;
     const letterFound = checkLetter(letterAsButton.textContent);
-    if (letterFound === null) {
+    if(letterFound) {
+      letterAsButton.className = 'correct-choice';
+    } else {
       letterAsButton.className = 'lose';
       heartImage[missed].src = lostHeartSRC;
       missed++;
@@ -99,9 +101,9 @@ const toggleOverlay = (cssClass, styling, text) => {
 const checkWin = () => {
   if (letterLI.length === showLI.length) {
     toggleOverlay('win', 'flex', 'You are good at this! Challenge yourself again?');
-    startGameButton.textContent = 'Go again';
+    startOrResetButton.textContent = 'Go again';
   } else if (missed > 4) {
     toggleOverlay('lose', 'flex', 'You almost had it!');
-    startGameButton.textContent = 'Try again';
+    startOrResetButton.textContent = 'Try again';
   }
 }
